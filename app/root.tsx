@@ -4,11 +4,17 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  LiveReload
 } from "@remix-run/react";
+import { LinksFunction } from "@remix-run/node";
 import "./tailwind.css";
+import Header from "~/components/Header";
+import { ReviewModalProvider } from "~/context/ReviewModalContext";
+
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
+    <ReviewModalProvider>
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
@@ -17,14 +23,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <div id='nav'>
+            <Header />
+        </div>
+          {children}
         <ScrollRestoration />
         <Scripts />
       </body>
     </html>
+    </ReviewModalProvider>
   );
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <Outlet />
+  ) ;
 }
