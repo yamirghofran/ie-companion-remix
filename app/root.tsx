@@ -7,13 +7,20 @@ import {
   LiveReload
 } from "@remix-run/react";
 import { LinksFunction } from "@remix-run/node";
-import "./tailwind.css";
+import styles from "./tailwind.css?url";
+import sonnerStyles from './sonner.css?url';
 import Header from "~/components/Header";
 import { ReviewModalProvider } from "~/context/ReviewModalContext";
+import { Toaster } from "sonner";
 
+export const links: LinksFunction = () => [
+  { rel: 'stylesheet', href: styles },
+  { rel: 'stylesheet', href: sonnerStyles },
+];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
+    <>
     <ReviewModalProvider>
     <html lang="en">
       <head>
@@ -23,6 +30,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        <Toaster />
         <div id='nav'>
             <Header />
         </div>
@@ -32,11 +40,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </body>
     </html>
     </ReviewModalProvider>
+    </>
   );
 }
 
 export default function App() {
   return (
+    <>
     <Outlet />
+    </>
   ) ;
 }

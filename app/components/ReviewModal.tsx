@@ -9,36 +9,39 @@ import { useLoaderData, useFetcher, Fetcher, Form, useNavigation } from "@remix-
 import { Professor, ProfessorWithRelations } from "~/types/Professor";
 import { Course, CourseWithRelations } from "~/types/Course";
 import { useReviewModal } from "~/context/ReviewModalContext";
+import CopyIcon from '~/icons/copy'
+import { toast } from "sonner";
 
 type FetcherData = {
     professors: ProfessorWithRelations[];
     courses: CourseWithRelations[];
+    success?: boolean;
 };
 
 export default function ReviewModal() {
-    const { open, setOpen } = useReviewModal();
+    const { open, setOpen, professor, setProfessor, course, setCourse } = useReviewModal();
     const fetcher = useFetcher<FetcherData>();
     const [rating, setRating] = useState(0);
+    const [shareLinkHover, setShareLinkHover] = useState(false);
     const { professors = [], courses = [] } = fetcher.data || { professors: [], courses: [] };
-    const [professor, setProfessor] = useState<string>("");
-    const [course, setCourse] = useState<string>("");
-    const navigation = useNavigation();
 
     useEffect(() => {
         if (fetcher.state === "idle" && !fetcher.data) {
-            fetcher.load("/resources/review-modal");
+            fetcher.load("/api/review-modal");
         }
+        
     }, [fetcher]);
 
     useEffect(() => {
-      if (navigation.state === "loading" && navigation.formAction === "/resources/review-modal") {
-        setOpen(false);
-        // Optionally reset form state here
-        setRating(0);
-        setProfessor("");
-        setCourse("");
-      }
-    }, [navigation.state, navigation.formAction, setOpen]);
+        if (fetcher.state === "idle" && fetcher.data?.success) {
+            setOpen(false);
+            setRating(0);
+            setProfessor("");
+            setCourse("");
+            toast.success('Review created');
+            fetcher.load("/api/review-modal");
+        }
+    }, [fetcher, setOpen, setRating, setProfessor, setCourse]);
 
     const allProfessors = useMemo(() => 
         professors?.map(prof => ({ id: prof.id.toString(), label: prof.name }))
@@ -98,20 +101,20 @@ export default function ReviewModal() {
           </Button>
         </DialogTrigger>
         <DialogContent className="w-full max-w-sm rounded-lg md:max-w-[600px]">
-          <Form method="post" action="/resources/review-modal">
+          <fetcher.Form method="post" action="/api/review-modal">
           <DialogHeader className="mb-4">
             <DialogTitle>Write a Review</DialogTitle>
           </DialogHeader>
           <div className="grid grid-cols-1 md:grid-cols-2 md:gap-x-4 gap-y-2">
               <div className=" col-span-1 flex flex-col space-y-1">
                 <Label className="text-sm font-medium" htmlFor="manager">
-                  Professor
+                  Professor: {professor}
                 </Label>
                 <ComboBox  name='professor' placeholder="Select professor" options={professorOptions} value={professor} setValue={setProfessor} />
               </div>
               <div className="col-span-1 flex flex-col space-y-1">
                 <Label className="text-sm font-medium" htmlFor="manager">
-                  Course
+                  Course: {course}
                 </Label>
                 <ComboBox name='course' placeholder="Select course" options={courseOptions} value={course} setValue={setCourse} />
               </div>
@@ -139,11 +142,22 @@ export default function ReviewModal() {
           </div>}
           <input type="hidden" name="rating" value={rating} />
           <Textarea placeholder="Write your review here..." rows={10} name="comment" />
-          <DialogFooter className="my-4">
-            <Button type="submit">Post Review</Button>
+          <DialogFooter className="w-full my-4">
+            <div className="w-full flex justify-between">
+              <Button onMouseEnter={() => setShareLinkHover(true)} onMouseLeave={() => setShareLinkHover(false)} type="button" variant="outline" className="h-8  ease-in-out" onClick={() => {
+              const url = window.location.href;
+              navigator.clipboard.writeText(url).then(() => {
+                toast.success('Link copied to clipboard');
+              }).catch(err => {
+                console.error('Failed to copy URL: ', err);
+              });
+            }}>{"Share Review Link"}{shareLinkHover ? <span className="w-4 h-4 ml-2"><CopyIcon /></span> : ""}</Button>
+              <Button type="submit" className="h-8">Post Review</Button>
+            </div>
           </DialogFooter>
-          </Form>
+          </fetcher.Form>
         </DialogContent>
       </Dialog>
     );
   }
+

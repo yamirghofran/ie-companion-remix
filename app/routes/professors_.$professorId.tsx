@@ -13,12 +13,32 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { getProfessor } from '~/util/db';
 import invariant from 'tiny-invariant';
+import type { Professor } from '~/types/Professor';
 
 export const loader = async ({params}: {params: {professorId: string}}) => {
     invariant(params.professorId, 'Expected params.professorId to be a string');
     const professor = await getProfessor(parseInt(params.professorId));
     return json({professor})
 }
+
+export const meta = ({ data }: { data: { professor: Professor } }) => {
+  if (!data || !data.professor) return [
+      {
+          title: "Professor | IE Companion",
+          description: "Professor",
+      },
+  ];
+  return [
+    {
+      title: `${data.professor?.name} Reviews | IE Companion`,
+      description: data.professor?.bio,
+    },
+    {
+      property: "og:title",
+      content: `${data.professor?.name} Reviews | IE Companion`
+    },
+  ];
+};
 
 
 function Professor () {

@@ -1,9 +1,9 @@
 export interface Resource {
   id: number;
   name: string;
-  description: string | null;
-  content: string | null;
-  type: string | null;
+  description?: string | null;
+  content?: string | null;
+  type?: string | null;
   items: ResourceItem[];
   createdAt: string;
   updatedAt: string;
@@ -12,9 +12,9 @@ export interface Resource {
 export interface ResourceItem {
   id: number;
   name: string;
-  description: string | null;
-  url: string | null;
-  type: string | null;
+  description?: string | null;
+  url?: string | null;
+  type?: string | null;
   resourceId: number;
   createdAt: string;
   updatedAt: string;

@@ -7,8 +7,8 @@ import Reviews from "~/components/Reviews";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "IE Companion" },
+    { name: "description", content: "Anonymous reviews of professors and courses by IE students." },
   ];
 };
 
@@ -19,7 +19,6 @@ export async function loader() {
       course: true,
     },
   });
-  console.log(reviews);
   return json({ reviews });
 }
 

@@ -16,7 +16,6 @@ export const loader = async ({ params }: { params: { courseId: string } }) => {
     return json({ course });
 };
 
-
 export const meta = ({ data }: { data: { course: CourseType | undefined | null } }) => {
   if (!data || !data.course) {
     return [
@@ -30,7 +29,10 @@ export const meta = ({ data }: { data: { course: CourseType | undefined | null }
   return [
     { title: `${course.name}` },
     { description: "Courses" },
-    { "og:title": course.name },
+    {
+      property: "og:title",
+      content: `${course.name} Reviews | IE Companion`
+    }
   ];
 };
 
@@ -47,7 +49,7 @@ function Course() {
           {navigation.state === 'loading' ? <SkeletonText /> : 
           <div className="w-full">
             <h1 className='text-2xl font-semibold my-4'>{course?.name}</h1>
-            <p className='mr-4 leading-6 text-slate-800 text-base max-w-2xl'>{course?.description}</p>
+            <p className='leading-6 text-slate-800 text-base max-w-2xl'>{course?.description}</p>
           </div>}
           </div>
           <CourseProfessorsCard professors={course?.professors.map(p => ({

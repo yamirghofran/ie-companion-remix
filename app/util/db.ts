@@ -1,4 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
+import { toast } from "sonner";
 
 const prisma = new PrismaClient();
 
@@ -74,6 +75,7 @@ export const createReview = async (
     rating: number,
     comment: string
 ) => {
+    try {
     return await prisma.review.create({
         data: {
             professorId,
@@ -84,6 +86,88 @@ export const createReview = async (
         include: {
             professor: true,
             course: true
+            }
+        });
+    } catch (error) {
+        toast.error('Error creating review');
+    }
+}
+
+export const getAllResources = async () => {
+    return await prisma.resource.findMany({
+        include: {
+            items: true
         }
     });
 }
+
+export const getResourceById = async (resourceId: number) => {
+    return await prisma.resource.findUnique({
+        where: {
+            id: resourceId
+        },
+        include: {
+            items: true
+        }
+    });
+}
+
+export const searchEverything = async (searchTerm: string) => {
+    const professors = await prisma.professor.findMany({
+        where: {
+            name: {
+                contains: searchTerm,
+            }
+        },
+        select: {
+            id: true,
+            name: true
+        },
+        take: 5
+    });
+
+    const courses = await prisma.course.findMany({
+        where: {
+            name: {
+                contains: searchTerm,
+            }
+        },
+        select: {
+            id: true,
+            name: true
+        },
+        take: 5
+    });
+
+    const resources = await prisma.resource.findMany({
+        where: {
+            OR: [
+                {
+                    name: {
+                        contains: searchTerm,
+                    }
+                },
+                {
+                    items: {
+                        some: {
+                            name: {
+                                contains: searchTerm,
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        select: {
+            id: true,
+            name: true
+        },
+        take: 5
+    });
+
+    return {
+        professors: professors.map(prof => ({ ...prof, type: 'professor' })),
+        courses: courses.map(course => ({ ...course, type: 'course' })),
+        resources: resources.map(resource => ({ ...resource, type: 'resource' }))
+    };
+};

@@ -18,7 +18,7 @@ import { Professor } from "~/types/Professor";
         <div className="flex items-center gap-4 hover:text-primary hover:cursor-pointer">
             <Avatar className="hidden h-9 w-9 sm:flex">
               <AvatarImage src="/avatars/01.png" alt="Avatar" />
-              <AvatarFallback></AvatarFallback>
+              <AvatarFallback>{professor.name.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col items-start gap-1">
               <p className="text-sm font-medium leading-none">{professor.name}</p>
@@ -33,7 +33,7 @@ import { Professor } from "~/types/Professor";
 
   export default function CourseProfessorsCard({ professors }: { professors: Professor[] }) {
     return (
-      <Card className='w-full md:max-w-xs  md:mr-16 mt-6 md:mt-0 h-fit'>
+      <Card className='w-full md:max-w-xs mt-6 md:mt-0 h-fit'>
         <CardHeader>
           <CardTitle>{professors.length > 1 ? 'Course Professors' : 'Course Professor'}</CardTitle>
         </CardHeader>

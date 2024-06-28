@@ -21,7 +21,7 @@
 
   export default function ProfessorCoursesCard({ courses }: { courses: Course[] }) {
     return (
-      <Card className='w-full md:max-w-xs  md:mr-16 mt-6 md:mt-0 h-fit'>
+      <Card className='w-full md:max-w-xs mt-6 md:mt-0 h-fit'>
         <CardHeader>
           <CardTitle>{courses.length > 1 ? 'Professor Courses' : 'Professor Course'}</CardTitle>
         </CardHeader>

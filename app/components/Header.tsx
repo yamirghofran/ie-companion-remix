@@ -7,6 +7,7 @@ import { Link } from '@remix-run/react'
 import { useReviewModal } from '~/context/ReviewModalContext'
 import SimpleDialog from '~/components/SimpleDialog'
 import ReviewModal from '~/components/ReviewModal'
+import Search from '~/components/Search'
 
 const navigation = [
   { name: 'Professors', href: '/professors' },
@@ -24,11 +25,13 @@ const secondaryNavigation = [
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { setOpen: setReviewModalOpen } = useReviewModal();
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === '/') {
         event.preventDefault();
+        setSearchOpen(true);
       }
     };
 
@@ -49,6 +52,11 @@ export default function Header() {
         </div>
         <div className="flex items-center gap-x-2 lg:hidden">
         <ReviewModal />
+        <Search open={searchOpen} setOpen={setSearchOpen} />
+        <button className="flex justify-between items-center w-48 border rounded-md px-2 my-2 hover:cursor-pointer hover:bg-slate-100 hover:text-black text-slate-500 ease-in-out duration-75" onClick={() => setSearchOpen(true)} >
+            <p className="text-sm">Search...</p>
+            <div className="text-sm rounded-sm bg-slate-50 w-4 text-center h-6 border shadow-sm">/</div>
+          </button>
           <button
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
@@ -67,6 +75,10 @@ export default function Header() {
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end gap-x-2">
           <ReviewModal />
+          <button className="flex justify-between items-center w-48 border rounded-md px-2 my-2 hover:cursor-pointer hover:bg-slate-100 hover:text-black text-slate-500 ease-in-out duration-75" onClick={() => setSearchOpen(true)} >
+            <p className="text-sm">Search...</p>
+            <div className="text-sm rounded-sm bg-slate-50 w-4 text-center h-6 border shadow-sm">/</div>
+          </button>
           <MoreDropdown />
         </div>
       </nav>
