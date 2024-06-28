@@ -52,3 +52,26 @@ model Review {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
+
+model Resource {
+  id          Int             @id @default(autoincrement())
+  name        String
+  description String?
+  content     String?
+  type        String?
+  items       ResourceItems[] @relation("ResourceItems")
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model ResourceItems {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  url         String?
+  type        String?
+  resource    Resource @relation("ResourceItems", fields: [resourceId], references: [id])
+  resourceId  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

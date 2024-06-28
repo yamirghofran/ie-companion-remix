@@ -20,3 +20,12 @@ export interface ReviewWithRelations extends Review {
     course: Course;
     professor: Professor;
   };
+
+export type CreateReviewInput = Omit<Review, 'id' | 'createdAt' | 'updatedAt'>;
+export type UpdateReviewInput = Partial<CreateReviewInput>;
+
+export type CreateReviewWithNamesInput = Omit<ReviewWithNames, 'id' | 'createdAt' | 'updatedAt'>;
+export type UpdateReviewWithNamesInput = Partial<CreateReviewWithNamesInput>;
+
+export type CreateReviewWithRelationsInput = Omit<ReviewWithRelations, 'id' | 'createdAt' | 'updatedAt' | 'course' | 'professor'>;
+export type UpdateReviewWithRelationsInput = Partial<CreateReviewWithRelationsInput>;
