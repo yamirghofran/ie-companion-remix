@@ -108,13 +108,13 @@ export default function ReviewModal() {
           <div className="grid grid-cols-1 md:grid-cols-2 md:gap-x-4 gap-y-2">
               <div className=" col-span-1 flex flex-col space-y-1">
                 <Label className="text-sm font-medium" htmlFor="manager">
-                  Professor: {professor}
+                  Professor
                 </Label>
                 <ComboBox  name='professor' placeholder="Select professor" options={professorOptions} value={professor} setValue={setProfessor} />
               </div>
               <div className="col-span-1 flex flex-col space-y-1">
                 <Label className="text-sm font-medium" htmlFor="manager">
-                  Course: {course}
+                  Course
                 </Label>
                 <ComboBox name='course' placeholder="Select course" options={courseOptions} value={course} setValue={setCourse} />
               </div>
